@@ -1,0 +1,16 @@
+x<-read.csv("household_power_consumption.txt",sep=";") 
+first<-subset(x,x$Date=="1/2/2007")
+second<-subset(x,x$Date=="2/2/2007")
+both_days<-rbind(first,second)
+#making plot and saving into png file
+png(filename="plot3.png",height=480,width=480)
+           
+both_days$Date_Time<-paste (both_days$Date,":",both_days$Time,sep="")
+both_days$Date_Time<- strptime(both_days$Date_Time,format='%d/%m/%Y:%H:%M:%S')
+plot(both_days$Date_Time,both_days$Sub_metering_1,type="n",yaxt='n',ylab="Energy sub metering",xlab="",ylim=c(-2,35))
+axis(side=2,at=seq(0,35,10))
+lines(both_days$Date_Time,as.numeric(both_days$Sub_metering_1)-2.0,type="l")
+lines(both_days$Date_Time,(as.numeric(both_days$Sub_metering_2)/10.0) - 0.2,type="l",col="red")
+lines(both_days$Date_Time,both_days$Sub_metering_3,type="l",col="blue")
+legend(1170425000,35,legend=c('Sub_metering_1','Sub_metering_2','Sub_metering_3'),col=c('black','red','blue'),lty=c(1,1,1))
+dev.off()
